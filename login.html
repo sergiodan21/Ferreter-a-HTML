@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicio Sesión</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Forum&display=swap" rel="stylesheet" />
+    
+    <style>
+        /* Estilos Específicos para la página de login.aspx */
+        /* Modificación del body para el fondo de imagen */
+        body.login-page {
+            margin: 0;
+            font-family: 'Forum', 'Poppins', sans-serif;
+            background-image: url('Fondo-Login.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box; /* Asegura que padding y border se incluyan en el ancho/alto */
+        }
+
+        .container {
+            display: flex;
+            max-width: 1000px;
+            width: 90%;
+            background: #1f1e1e; /* Color de fondo del contenedor principal del login */
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .left-container {
+            background: #032b5f;
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+            .left-container img.logo {
+                width: 400px;
+                height: auto;
+                margin-bottom: 20px;
+                border-radius: 8px;
+            }
+
+            .left-container .description {
+                font-size: 16px;
+                color: #fff;
+                max-width: 220px;
+                line-height: 1.6;
+            }
+
+        .right {
+            width: 50%;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        /* Ajuste para que los inputs de email y el input de la contraseña tengan el mismo padding y ancho */
+        /* Esta regla ahora es para TODOS los inputs de tipo text y email que no estén en el wrapper de contraseña,
+            y también para el input de contraseña si no tiene el wrapper. */
+        input[type="email"],
+        input[type="text"]:not(.password-input-wrapper input), /* Asegura que no aplique al input de contraseña cuando es text */
+        input[type="password"]:not(.password-input-wrapper input) /* Asegura que no aplique al input de contraseña cuando es password */ {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            color: #333;
+            width: 100%;
+            box-sizing: border-box; /* Asegura box-sizing para estos inputs */
+        }
+
+        /* ------------------------------------------------------------- */
+        /* ---------- SECCIÓN CRÍTICA PARA LA CONTRASEÑA ------------- */
+        /* ------------------------------------------------------------- */
+        .password-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 0; /* Asegura que el contenedor no agregue padding extra */
+        }
+
+            /* Esta es la regla clave: apunta al input directamente dentro del wrapper,
+            sin importar su tipo. Usamos !important para forzar la aplicación. */
+            .password-input-wrapper input {
+                padding: 10px !important; /* Mantener padding general */
+                padding-right: 45px !important; /* Asegura que este padding-right se aplica siempre */
+                width: 100% !important; /* Asegura que el ancho sea 100% */
+                box-sizing: border-box !important; /* ¡FUNDAMENTAL! Asegura que el padding se incluye en el ancho */
+                border: 1px solid #ccc !important; /* Asegura el borde */
+                border-radius: 6px !important; /* Asegura el border-radius */
+                background-color: #fff !important; /* Asegura el color de fondo */
+                color: #333 !important; /* Asegura el color del texto */
+            }
+
+        /* ------------------------------------------------------------- */
+        /* ------------------------------------------------------------- */
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        button.btn { /* Se usa .btn porque el botón ahora tiene esa clase */
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+            button.btn:disabled {
+                background-color: #999;
+                cursor: not-allowed;
+            }
+
+            button.btn:hover:not(:disabled) {
+                background-color: #0056b3;
+            }
+
+        .message {
+            font-size: 0.9em;
+            color: #d9534f;
+            margin-top: 10px;
+            display: none; /* Por defecto oculto, JavaScript lo mostrará si hay error */
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .links {
+            margin-top: 15px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+            .links a {
+                color: #007bff;
+                text-decoration: none;
+            }
+
+                .links a:hover {
+                    text-decoration: underline;
+                }
+
+        /* Estilos para el icono de mostrar/ocultar */
+        .password-input-wrapper .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            color: #555;
+            user-select: none;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        /* Estilo específico para el texto "No tienes cuenta aún?" */
+        .links .no-account-text {
+            color: #000;
+            font-weight: normal;
+        }
+
+        /* Media queries para login.aspx */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                width: 95%;
+                max-width: 500px;
+            }
+
+            .left-container,
+            .right {
+                width: 100%;
+                padding: 20px;
+            }
+
+            .left-container {
+                padding-bottom: 0;
+            }
+
+                .left-container img.logo {
+                    width: 250px;
+                    margin-bottom: 15px;
+                }
+
+                .left-container .description {
+                    font-size: 14px;
+                    max-width: 80%;
+                }
+
+            .right {
+                padding-top: 20px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .right {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            /* Aseguramos que el input de email y el input de contraseña mantengan sus tamaños */
+            input[type="email"],
+            .password-input-wrapper input { /* Aplicamos las reglas a ambos */
+                padding: 8px !important; /* Usamos !important por si hay conflicto con la regla general */
+                margin-bottom: 15px;
+            }
+
+            button.btn {
+                padding: 10px;
+                font-size: 16px;
+            }
+
+            .links {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body class="login-page">
+    <form> 
+        <div class="container">
+            <div class="left-container">
+                <img src="Logo JE.jpg" alt="Logo de FERRELECTRICOS" class="logo" />
+                <p class="description">
+                    Somos FERRELECTRICOS: Expertos en soluciones eléctricas y ferretería para tus proyectos.
+                </p>
+            </div>
+            <div class="right">
+                <h2>Inicia Sesión</h2>
+
+                <div id="lblMensaje" class="message" style="color: red;"></div><br />
+
+                <label for="txtEmail">Correo electrónico</label>
+                <input type="email" id="txtEmail" class="input" placeholder="Tu correo" required />
+
+                <label for="txtPassword">Contraseña</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="txtPassword" class="input" placeholder="Ingresa contraseña" required />
+                    <span class="toggle-password" id="togglePassword">👁️</span>
+                </div>
+
+                <button type="submit" id="btnLogin" class="btn">Confirmar</button>
+
+                <div class="links">
+                    <a href="dashboard.html">← Volver</a>
+                </div>
+                <div class="links">
+                    <a href="https://accounts.google.com">Inicia sesión con Google</a><br /><br />
+                    <a href="NUEVACONTRASEÑA.html">Olvidé mi contraseña</a>
+                </div>
+                <div class="links">
+                    <span class="no-account-text">¿No tienes cuenta aún?</span>
+                    <a href="registro.html">Registrarse</a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        // Script para alternar la visibilidad de la contraseña
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('txtPassword'); // El ID ya no usa ClientID
+
+        togglePassword.addEventListener('click', function () {
+            // Cambia el tipo del input entre 'password' y 'text'
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Opcional: Cambia el icono del ojo
+            this.textContent = (type === 'password') ? '👁️' : '🔒'; 
+        });
+
+        // Script para manejar el envío del formulario (ejemplo básico sin backend)
+        const loginForm = document.querySelector('form');
+        const emailInput = document.getElementById('txtEmail');
+        const passwordInputLogin = document.getElementById('txtPassword'); // Diferente nombre para evitar conflicto
+        const messageDiv = document.getElementById('lblMensaje');
+
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Previene el envío del formulario por defecto
+
+            const email = emailInput.value;
+            const password = passwordInputLogin.value;
+
+            // Simulación de validación de credenciales (reemplaza con tu lógica de backend)
+            if (email === "admin@ferreteria.com" && password === "password123") {
+                messageDiv.style.display = 'none'; // Oculta el mensaje de error si existe
+                alert('Inicio de sesión exitoso. Redireccionando a la página principal.');
+                window.location.href = 'inicio.html'; // Redirige a la página de inicio
+            } else {
+                messageDiv.textContent = 'Correo o contraseña incorrectos. Inténtalo de nuevo.';
+                messageDiv.style.display = 'block'; // Muestra el mensaje de error
+            }
+        });
+    </script>
+</body>
+</html>

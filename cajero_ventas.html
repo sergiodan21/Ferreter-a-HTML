@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ventas - Cajero Ferretería</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        font-family: 'Segoe UI', sans-serif;
+        color: #111;
+        background: #f8f8f8;
+        overflow: hidden;
+    }
+
+    .dashboard {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+
+    .sidebar {
+        width: 240px!important;
+        min-width: 240px;
+        background-color: #111;
+        color: white;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .sidebar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .logo-ferreteria {
+        width: 150px;
+        height: auto;
+        padding: 20px 20px 10px 20px;
+        margin: 0 auto;
+        border-radius: 50%;
+        display: block;
+    }
+
+    .sidebar nav ul {
+        list-style-type: none;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar nav ul li {
+        margin-bottom: 5px;
+    }
+
+    .sidebar nav ul li:last-child {
+        margin-bottom: 0;
+    }
+
+    .sidebar nav ul li a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        padding: 12px 20px;
+        border-radius: 0;
+        transition: background 0.3s ease, color 0.3s ease;
+        font-weight: 500;
+        font-size: 1.1em;
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar nav ul li a.activo {
+        background-color: #1e3a5f;
+        color: #ffffff;
+    }
+
+    .main-content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: #fdfdfd;
+    }
+
+    .topbar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .user-menu {
+        position: relative;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .user-name {
+        cursor: pointer;
+        background: #28a745;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .user-name:hover {
+        background-color: #218838;
+        transform: scale(1.05);
+    }
+
+    .user-name i {
+        margin-right: 8px;
+    }
+
+    .dropdown {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+        z-index: 1;
+        right: 0;
+        top: 50px;
+        padding: 10px;
+        border-radius: 8px;
+        color: #333;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dropdown div {
+        padding: 5px 0;
+        line-height: 1.4;
+    }
+
+    .dropdown strong {
+        color: #555;
+    }
+
+    .dropdown a {
+        color: #007bff;
+        text-decoration: none;
+        display: block;
+        padding: 5px 0;
+    }
+
+    .dropdown a:hover {
+        text-decoration: underline;
+    }
+
+    .header-section {
+        margin-bottom: 20px;
+    }
+
+    .header-section h1 {
+        margin: 0 0 10px;
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn.btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn.btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .search-input {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table th, .data-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .data-table th {
+        background-color: #f1f1f1;
+    }
+
+    .actions-cell button {
+        background: #17a2b8;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .actions-cell button:hover {
+        background: #138496;
+    }
+
+    .logout-btn {
+        background-color: #dc3545;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: #c82333;
+        transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div style="text-align: center;">
+        <img src="Logo JE.jpg" alt="Logo Ferretería" class="logo-ferreteria"/>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="cajero_productos.html">Productos</a></li>
+          <li><a href="cajero_ventas.html" class="activo">Ventas</a></li>
+          <li><a href="cajero_facturas.html">Facturas</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <div class="user-menu">
+          <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+          </button>
+          <div class="user-name" onclick="toggleDropdown()">
+            <i class="fas fa-user-circle"></i> Cajero
+          </div>
+          <div class="dropdown" id="userDropdown">
+            <div><strong>Nombre:</strong> James Nicolas</div>
+            <div><strong>Correo:</strong> cajero@ferreteria.com</div>
+            <div><strong>Teléfono:</strong> +52 123 456 7890</div>
+            <div><a href="NUEVACONTRASEÑA.html">Cambiar contraseña</a></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-section">
+        <h1>Gestión de Ventas</h1>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="window.location.href='cajero_gestion_ventas.html';">
+            <i class="fas fa-plus"></i> Nueva Venta
+          </button>
+          <input type="text" class="search-input" placeholder="Buscar venta..." />
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID Venta</th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>V001</td>
+              <td>2024-05-10</td>
+              <td>Cliente A</td>
+              <td>$250.000</td>
+              <td>Completada</td>
+              <td class="actions-cell">
+                <button><i class="fas fa-eye"></i> Ver Detalles</button>
+              </td>
+            </tr>
+            <tr>
+              <td>V002</td>
+              <td>2024-05-11</td>
+              <td>Cliente B</td>
+              <td>$120.500</td>
+              <td>Pendiente Pago</td>
+              <td class="actions-cell">
+                <button><i class="fas fa-eye"></i> Ver Detalles</button>
+              </td>
+            </tr>
+            <tr>
+              <td>V003</td>
+              <td>2024-05-11</td>
+              <td>Cliente C</td>
+              <td>$80.000</td>
+              <td>Completada</td>
+              <td class="actions-cell">
+                <button><i class="fas fa-eye"></i> Ver Detalles</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function toggleDropdown() {
+      const dropdown = document.getElementById('userDropdown');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    document.addEventListener('click', function (e) {
+      const userMenu = document.querySelector('.user-menu');
+      const dropdown = document.getElementById('userDropdown');
+
+      if (userMenu && !userMenu.contains(e.target) && dropdown.style.display === 'block') {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    function logout() {
+      window.location.href = "login.html";
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentPath = window.location.pathname.split('/').pop();
+      const sidebarLinks = document.querySelectorAll('.sidebar nav ul li a');
+
+      sidebarLinks.forEach(link => {
+        if (link.getAttribute('href').split('/').pop() === currentPath) {
+          link.classList.add('activo');
+        } else {
+          link.classList.remove('activo');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
